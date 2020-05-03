@@ -3,11 +3,15 @@
 import asyncio
 import websockets
 import ssl
+import argparse
 
-async def send(uri, token, nick):
+from commands.ping import Ping
+
+async def send(uri, token, nick, channel):
 
   token = "PASS " + "oauth:" + token
   nick = "NICK " + nick
+  channel = "JOIN #" + channel
   print("\U00002705	Connecting to Twitch")
   async with websockets.connect(uri) as websocket:
     
@@ -17,7 +21,8 @@ async def send(uri, token, nick):
     print(f"> {nick}")
     response = await websocket.recv()
     print(f"< {response}")
-    await websocket.send("JOIN #kandyland")
+    await websocket.send(channel)
+    print(f"< {channel}")
     while True:
       response = await websocket.recv()
       print(f"< {response}", end='')
@@ -30,11 +35,22 @@ async def send(uri, token, nick):
 
 def main():
 
+  parser = argparse.ArgumentParser()
+  parser.add_argument("nick", help="Twitch username")
+  parser.add_argument("token", help="oauth token")
+  parser.add_argument("channel", help="chat to connect to")
+
+  args = parser.parse_args()
+
   uri = "wss://irc-ws.chat.twitch.tv:443"
-  token = "hexka0uz18q0s1aba6opg9spbc3baf"
-  nick = "toerktumlare"
+  token = args.token
+  nick = args.nick.lower()
+  channel = args.channel
+
+  ping = Ping("!ping")
 
   print("\U0001F4BB	Starting client")
-  asyncio.run(send(uri, token, nick))
+  asyncio.run(send(uri, token, nick, channel))
 
-if __name__ == "__main__": main()
+if __name__ == "__main__": 
+  main()
