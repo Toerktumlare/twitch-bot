@@ -29,8 +29,8 @@ async def send(uri, token, nick, channel):
       if response.startswith("PING"):
         print("\U0001F3BE Responding to PING")
         response = "PONG :tmi.twitch.tv"
+        print(f"> {response}")
         await websocket.send(response)
-        print(f"< {response}")
 
 
 def main():
