@@ -6,11 +6,11 @@ class BaseCommand(ABC):
         self.command = command
 
     @abstractmethod
-    def is_match(self):
-        if(command == self.command):
-            return True
-        return False
+    def is_match(self, response):
+      return False  
+            
+        
 
     @abstractmethod
-    def process(self, command):
-        pass
+    def execute(self, command):
+      return None

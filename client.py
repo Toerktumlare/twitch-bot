@@ -6,32 +6,46 @@ import ssl
 import argparse
 
 from commands.ping import Ping
+from commands.command_utils import getCommandList
 
-async def send(uri, token, nick, channel):
+class Client:
+  def __init__(self, uri, token, nick, channel):
+    self.uri = uri
+    self.token = token
+    self.nick = nick
+    self.channel = channel
+    self.commands = getCommandList()
 
-  token = "PASS " + "oauth:" + token
-  nick = "NICK " + nick
-  channel = "JOIN #" + channel
-  print("\U00002705	Connecting to Twitch")
-  async with websockets.connect(uri) as websocket:
-    
-    await websocket.send(token)
-    print(f"> {token}")
-    await websocket.send(nick)
-    print(f"> {nick}")
-    response = await websocket.recv()
-    print(f"< {response}")
-    await websocket.send(channel)
-    print(f"< {channel}")
+  def __process(self, chatResponse):
+    for command in self.commands:
+      if(command.is_match(chatResponse)):
+        return command.execute(chatResponse)
+    return None
+
+  async def __start_loop(self, websocket):
     while True:
-      response = await websocket.recv()
-      print(f"< {response}", end='')
-      if response.startswith("PING"):
-        print("\U0001F3BE Responding to PING")
-        response = "PONG :tmi.twitch.tv"
-        print(f"> {response}")
+      chatResponse = await websocket.recv()
+      print(f"< {chatResponse}", end='')
+      response = self.__process(chatResponse)
+      print(f'{response}')
+      if(response is not None):
         await websocket.send(response)
 
+  async def Start(self):
+    token = "PASS " + "oauth:" + self.token
+    nick = "NICK " + self.nick
+    channel = "JOIN #" + self.channel
+    print("\U00002705	Connecting to Twitch")
+    async with websockets.connect(self.uri) as websocket:
+    
+      await websocket.send(token)
+      await websocket.send(nick)
+      response = await websocket.recv()
+      print(f'{response}')
+      await websocket.send(channel)
+      response = await websocket.recv()
+      print(f'{response}')
+      await self.__start_loop(websocket)
 
 def main():
 
@@ -47,10 +61,9 @@ def main():
   nick = args.nick.lower()
   channel = args.channel
 
-  ping = Ping("!ping")
-
   print("\U0001F4BB	Starting client")
-  asyncio.run(send(uri, token, nick, channel))
+  client = Client(uri, token, nick, channel)
+  asyncio.run(client.Start())
 
 if __name__ == "__main__": 
   main()
