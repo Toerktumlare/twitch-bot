@@ -1,8 +1,8 @@
 from commands.base_command import BaseCommand
 
 class TwitchPing(BaseCommand):
-    def __init__(self, command):
-        super().__init__(command)
+    def __init__(self, command, commandType):
+        super().__init__(command, commandType)
 
     def is_match(self, response):
         if(response.startswith(self.command)):
@@ -11,4 +11,4 @@ class TwitchPing(BaseCommand):
 
     def execute(self, command):
         print("\U0001F3BE Responding to PING")
-        return "PONG :tmi.twitch.tv"
+        return self.commandType + " :tmi.twitch.tv"

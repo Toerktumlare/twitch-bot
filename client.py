@@ -24,27 +24,35 @@ class Client:
 
   async def __start_loop(self, websocket):
     while True:
+
       chatResponse = await websocket.recv()
       print(f"< {chatResponse}", end='')
+
       response = self.__process(chatResponse)
-      print(f'{response}')
+
       if(response is not None):
         await websocket.send(response)
 
   async def Start(self):
+
     token = "PASS " + "oauth:" + self.token
     nick = "NICK " + self.nick
     channel = "JOIN #" + self.channel
+
     print("\U00002705	Connecting to Twitch")
     async with websockets.connect(self.uri) as websocket:
     
       await websocket.send(token)
       await websocket.send(nick)
+
       response = await websocket.recv()
       print(f'{response}')
+
       await websocket.send(channel)
+      
       response = await websocket.recv()
       print(f'{response}')
+      
       await self.__start_loop(websocket)
 
 def main():

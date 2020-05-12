@@ -1,6 +1,8 @@
-from commands.base_command import BaseCommand
+import random
 
-class Ping(BaseCommand):
+from commands.base_command import BaseCommand 
+
+class RandomNumber(BaseCommand):
     def __init__(self, command, commandType):
         super().__init__(command, commandType)
 
@@ -11,5 +13,5 @@ class Ping(BaseCommand):
         return False
 
     def execute(self, response):
-        print(f'\U0001F3BE Ponging back to chat')
-        return self.commandType + " #toerktumlare :PONG"
+        print(f'\U0001F3BE Returning random number to chat')
+        return self.commandType + " #toerktumlare :" + str(random.randrange(1, 11))
