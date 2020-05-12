@@ -16,6 +16,8 @@ class Compliment(BaseCommand):
         return False
 
     def execute(self, response):
+        username = response.split("!")[0][1:]
         print(f'\U0001F3BE Returning random compliment to chat')
         compliment = self.compliments[random.randrange(0, len(self.compliments)-1)]
-        return self.commandType + " #toerktumlare :" + compliment
+        message = self.commandType + " #toerktumlare :@" + username + " " +  compliment
+        return message
