@@ -16,6 +16,8 @@ class Client:
     self.channel = channel
     self.commands = getCommandList()
 
+    
+
   def __process(self, chatResponse):
     for command in self.commands:
       if(command.is_match(chatResponse)):
