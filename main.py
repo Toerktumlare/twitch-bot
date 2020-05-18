@@ -14,19 +14,18 @@ class Client:
     self.token = token
     self.nick = nick
     self.channel = channel
-    self.commands = getCommandList()
-
-    
+    self.commands = getCommandList(channel)
 
   def __process(self, chatResponse):
+
     for command in self.commands:
       if(command.is_match(chatResponse)):
         return command.execute(chatResponse)
     return None
 
   async def __start_loop(self, websocket):
-    while True:
 
+    while True:
       chatResponse = await websocket.recv()
       print(f"< {chatResponse}", end='')
 
@@ -35,7 +34,7 @@ class Client:
       if(response is not None):
         await websocket.send(response)
 
-  async def Start(self):
+  async def start(self):
 
     token = "PASS " + "oauth:" + self.token
     nick = "NICK " + self.nick
@@ -73,7 +72,7 @@ def main():
 
   print("\U0001F4BB	Starting client")
   client = Client(uri, token, nick, channel)
-  asyncio.run(client.Start())
+  asyncio.run(client.start())
 
 if __name__ == "__main__": 
   main()

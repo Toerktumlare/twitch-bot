@@ -5,8 +5,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-ENV nick="test"
-ENV token="test"
-ENV channel="test"
+ENV nick=""
+ENV token=""
+ENV channel=""
 
 CMD ["sh", "-c", "python -u ./client.py $nick $token $channel"]

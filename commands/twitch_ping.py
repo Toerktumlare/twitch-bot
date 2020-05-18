@@ -1,8 +1,8 @@
 from commands.base_command import BaseCommand
 
 class TwitchPing(BaseCommand):
-    def __init__(self, command, commandType):
-        super().__init__(command, commandType)
+    def __init__(self, command, commandType, channel=None):
+        super().__init__(command, commandType, channel)
 
     def is_match(self, response):
         if(response.startswith(self.command)):

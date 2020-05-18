@@ -1,6 +1,8 @@
-from commands.base_command import BaseCommand
+import random
 
-class Commands(BaseCommand):
+from commands.base_command import BaseCommand 
+
+class Dice(BaseCommand):
     def __init__(self, command, commandType, channel):
         super().__init__(command, commandType, channel)
 
@@ -11,4 +13,5 @@ class Commands(BaseCommand):
         return False
 
     def execute(self, response):
-        return self.commandType + " #" + self.channel + " : !ping !dice !compliment !commands"
+        print(f'\U0001F3BE Returning random number to chat')
+        return self.commandType + " #" + self.channel + " :" + str(random.randrange(1, 7))
