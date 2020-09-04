@@ -1,12 +1,15 @@
 FROM python:3-alpine
 
-COPY requirements.txt ./
+WORKDIR /code
+
+COPY requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY src/ .
 
 ENV nick=""
 ENV token=""
 ENV channel=""
 
-CMD ["sh", "-c", "python -u ./client.py $nick $token $channel"]
+CMD ["sh", "-c", "python -u ./main.py $nick $token $channel"]
